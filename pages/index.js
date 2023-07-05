@@ -1,57 +1,59 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./index.module.css";
+import Question from "./modules/question";
+import PageHeader from "./modules/layout/header/header";
+import SideBar from "./modules/layout/sidebar/sidebar"
 
+let user = null;
 export default function Home() {
-  const [animalInput, setAnimalInput] = useState("");
+  useEffect(() => {
+    user = JSON.parse(localStorage.getItem('user'));
+  }, [])
+
   const [result, setResult] = useState();
+  async function GetQuetion(category) {
+    if (user) {
+      try {
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ category: category, username: user.username, roomname: 'sprint_retro' }),
+        });
 
-  async function onSubmit(event) {
-    event.preventDefault();
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ animal: animalInput }),
-      });
-
-      const data = await response.json();
-      if (response.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${response.status}`);
+        const data = await response.json();
+        if (response.status !== 200) {
+          throw data.error || new Error(`Request failed with status ${response.status}`);
+        }
+        setResult(data.result);
+      } catch (error) {
+        // Consider implementing your own error handling logic here
+        console.error(error);
+        alert(error.message);
       }
-
-      setResult(data.result);
-      setAnimalInput("");
-    } catch(error) {
-      // Consider implementing your own error handling logic here
-      console.error(error);
-      alert(error.message);
+    } else {
+      alert('você ainda não entrou na sala.')
     }
   }
 
   return (
     <div>
       <Head>
-        <title>OpenAI Quickstart</title>
-        <link rel="icon" href="/dog.png" />
+        <title>Show do Milhão (Sprint Retrô) </title>
       </Head>
-
+      <PageHeader />
+      <SideBar />
       <main className={styles.main}>
-        <img src="/dog.png" className={styles.icon} />
-        <h3>Name my pet</h3>
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            name="animal"
-            placeholder="Enter an animal"
-            value={animalInput}
-            onChange={(e) => setAnimalInput(e.target.value)}
-          />
-          <input type="submit" value="Generate names" />
-        </form>
-        <div className={styles.result}>{result}</div>
+        <h1>Categorias</h1>
+        <div className={styles.div_button}>
+          <button className={styles.button_category} type="button" onClick={e => GetQuetion('culture_pop')}>Cultura Pop</button>
+          <button className={styles.button_category} onClick={e => GetQuetion('school_time')}>Tempo de escola</button>
+          <button className={styles.button_category} onClick={e => GetQuetion('backend')}>Backend</button>
+          <button className={styles.button_category} onClick={e => GetQuetion('frontend')}>Frontend</button>
+        </div>
+        <Question result={result} />
       </main>
     </div>
   );
