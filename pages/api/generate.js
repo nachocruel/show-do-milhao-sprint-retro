@@ -1,5 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
 import { Card } from "./domain/cards/Card";
+import { Server } from './server'
+const server = Server.GetInstance();
 
 const cards = [];
 const kudocard = new Card("/partiner.png", "Kudo Card");
@@ -94,7 +96,9 @@ export default async function (req, res) {
     return;
   }
 
+  const room = server.GetRoom(roomname);
 
+  console.log(room)
   let topic = ''
   switch (category) {
     case 'school_time':
