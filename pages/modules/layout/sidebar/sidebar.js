@@ -1,9 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import styles from './sidebar.module.css'
 export default function SideBar() {
     const [nickName, setUserName] = useState('')
     const [result, setResult] = useState([])
+
+    useEffect(async () => {
+      const response = await fetch("/api/roomadd", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: null, roomname: 'sprint_retro' })
+      });
+
+      const data = await response.json();
+      if (response.status !== 200) {
+        throw data.error || new Error(`Request failed with status ${response.status}`);
+      }
+
+      const users = JSON.parse(data.result);
+      setResult(users);
+    }, [])
     
     const addUser = async () => {
         try {

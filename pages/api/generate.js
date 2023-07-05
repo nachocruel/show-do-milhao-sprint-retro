@@ -96,6 +96,7 @@ export default async function (req, res) {
     return;
   }
 
+  console.log('roomname: ', roomname)
   const room = server.GetRoom(roomname);
 
   console.log(room)

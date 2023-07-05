@@ -37,12 +37,17 @@ export class Room {
     }
 
     SetNext() {
-        if(this.members <= 2)
+        if(this.members.length <= 2)
             throw Error("It must have at least 3 members room.");
-        if(index < this.members.length)
+
+        if(this.index < this.members.length - 1)
         {
-            this.members[this.inde].turn = false;
+            this.members[this.index].turn = false;
             this.index++;
+            this.members[this.index].turn = true;
+        } else {
+            this.members[this.index].turn = false;
+            this.index = 1;
             this.members[this.index].turn = true;
         }
     }

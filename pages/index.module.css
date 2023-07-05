@@ -123,11 +123,11 @@
 }
 
 .main .ul {
-  list-style-type:none
+  list-style-type: none
 }
 
 .main .li:hover {
-  background-color:#10a37f;
+  background-color: #10a37f;
   color: white;
 }
 
@@ -141,7 +141,7 @@
   margin-top: 15px;
   border: 1px solid darkgray;
   border-radius: 5px;
-  box-shadow: 2px 2px #888888 ;
+  box-shadow: 2px 2px #888888;
   width: auto;
   height: auto;
 }
@@ -164,4 +164,14 @@
   display: block;
   margin-left: auto;
   margin-right: auto
+}
+
+.main .infoResSuccess {
+  font-size: large;
+  color: #10a37f;
+}
+
+.main .infoResErro {
+  font-size: large;
+  color: red;
 }

@@ -1,8 +1,7 @@
 
 import styles from "../index.module.css";
 import useSound from 'use-sound';
-import React, { useEffect } from "react";
-import { SideBar } from './layout/sidebar/sidebar';
+import React, { useEffect, useState } from "react";
 
 const li_a = React.createRef()
 const li_b = React.createRef()
@@ -80,6 +79,8 @@ export default function Question({ result }) {
     useEffect(() => {
         user = JSON.parse(localStorage.getItem('user'));
     }, [])
+    const [infoSuccess, SetSuccess] = useState('')
+    const [infoResErro, setErro] = useState('');
 
     const [playVictory] = useSound('/tadaa-47995.mp3');
     const [playDefeat] = useSound('/fiasco-154915.mp3');
@@ -90,8 +91,10 @@ export default function Question({ result }) {
             if (correta === selectedOption) {
                 score = 1;
                 playVictory();
+                SetSuccess("Correto!")
             } else {
                 playDefeat();
+                setErro("Errado!")
             }
 
             try {
@@ -104,6 +107,12 @@ export default function Question({ result }) {
                 });
 
                 const data = response.json();
+                setTimeout(() => {
+                    SetSuccess("")
+                    setErro("");
+                    window.location.reload();
+                }, 5000);
+                
             } catch (error) {
                 console.error(error);
                 alert(error.message);
@@ -144,6 +153,8 @@ export default function Question({ result }) {
         </ul>
         <div>
             <button className={styles.button} onClick={(_) => ConfirmOption(result.question.correta)}>Confirmar</button>
+            <span className={styles.infoResSuccess}>{infoSuccess}</span>
+            <span className={styles.infoResErro}>{infoResErro}</span>
         </div>
     </div>
     )
