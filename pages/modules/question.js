@@ -94,7 +94,7 @@ export default function Question({ result }) {
                 SetSuccess("Correto!")
             } else {
                 playDefeat();
-                setErro("Errado!")
+                setErro(`Errado! Resposta correta: ${correta}`);
             }
 
             try {
